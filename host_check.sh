@@ -12,7 +12,7 @@ if [ -f "$U_INPUT" ]; then
     rm -rf $U_INPUT #Used to cleanup the temporary file
 fi
 
-echo Please enter and IP Address
+echo Please enter an IP Address
 read -r IP_ADDR
 
 if [[ -z $IP_ADDR ]]; then
