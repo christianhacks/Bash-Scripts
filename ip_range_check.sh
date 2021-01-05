@@ -246,6 +246,61 @@ do
 					
 				done < $U_INPUT	
 			fi
+		;;
+		
+		#Default selection
+		
+		*)
+			echo Please enter the starting IP Address
+			read -r IP_ADDR
+
+
+			if [[ -z $IP_ADDR ]]; then
+				echo -e "\e[91mERROR: Invalid IP Address\e[0m";
+				echo -e "\e[91mValid IP Address format: XXX.XXX.XXX.XXX\e[0m";
+				echo -e "\e[1m Press [ENTER]\e[0m"
+
+			else
+				echo Please enter the range or number of hosts
+				read -r RANGE
+				
+				FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+				
+				for i in $(seq $((FOUR-1)) $((FOUR+(RANGE-2))))
+				do
+					
+					ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
+					TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
+					THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
+					FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+					
+					OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
+					
+					i=$((i+1))
+					
+					OCT_IP="$ONE.$TWO.$THREE.$i" 
+					
+					echo "$OCT_IP" >> "$U_INPUT"
+					
+					#echo $OCT_IP #Debugging			
+				done
+				printf "\n"
+				while read line;
+				do 
+					#ping $line #Leave for Debugging
+					
+					ping -w5 $line >/dev/null 2>&1
+					PING_T=$(echo $?)
+					if [ $PING_T -eq 0 ]; then
+						echo -e "$line: \e[32mThe host is available\e[0m";
+					
+					elif [ $PING_T -ge 1 ]; then
+						echo -e "$line: \e[91mHost is unavailable\e[0m";
+
+					fi
+					
+				done < $U_INPUT	
+			fi	
 		;;	
 	esac
 
