@@ -39,50 +39,66 @@ do
 			if [[ -z $IP_ADDR ]]; then
 				echo -e "\e[91mERROR: Invalid IP Address\e[0m";
 				echo -e "\e[91mValid IP Address format: XXX.XXX.XXX.XXX\e[0m";
-				echo -e "\e[1m Press [ENTER]\e[0m"
+				echo -e "\e[1m Press [ENTER] to continue\e[0m"
 
 			else
+			
 				echo Please enter the range or number of hosts
 				read -r RANGE
 				
+				
 				ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
 				
-				for i in $(seq $((ONE-1)) $((ONE+(RANGE-2))))
-				do
-					
-					ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
-					TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
-					THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
-					FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
-					
-					OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
-					
-					i=$((i+1))
-					
-					OCT_IP="$i.$TWO.$THREE.$FOUR" 
-					
-					echo "$OCT_IP" >> "$U_INPUT"
-					
-					#echo $OCT_IP #Leave for Debugging
-					
-				done
-				printf "\n"
-				while read line;
-				do 
-					#ping $line #Leave for Debugging
-					
-					ping -w5 $line >/dev/null 2>&1
-					PING_T=$(echo $?)
-					if [ $PING_T -eq 0 ]; then
-						echo -e "$line: \e[32mThe host is available\e[0m";
-					
-					elif [ $PING_T -ge 1 ]; then
-						echo -e "$line: \e[91mHost is unavailable\e[0m";
-
-					fi
-					
 				
-				done < $U_INPUT
+				if [[ $((ONE+RANGE)) -gt 255 ]]; then
+					
+					echo -e "\e[91mERROR: Illegal IP Address Range\e[0m";
+					echo -e "The range should not be more than the octet value + 254"
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
+					
+				elif [[ $((ONE+RANGE)) -le 255 ]]; then
+				
+					printf "\n"
+					echo -e "\e[1mThis may take some time\e[0m";
+					for i in $(seq $((ONE-1)) $((ONE+(RANGE-2))))
+					do
+						
+						ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
+						TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
+						THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
+						FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+						
+						OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
+						
+						i=$((i+1))
+						
+						OCT_IP="$i.$TWO.$THREE.$FOUR" 
+						
+						echo "$OCT_IP" >> "$U_INPUT"
+						
+						#echo $OCT_IP #Leave for Debugging
+						
+					done
+					printf "\n"
+					while read line;
+					do 
+						#ping $line #Leave for Debugging
+						
+						ping -w5 $line >/dev/null 2>&1
+						PING_T=$(echo $?)
+						if [ $PING_T -eq 0 ]; then
+							echo -e "$line: \e[32mThe host is available\e[0m";
+						
+						elif [ $PING_T -ge 1 ]; then
+							echo -e "$line: \e[91mHost is unavailable\e[0m";
+
+						fi
+						
+					
+					done < $U_INPUT
+					
+				fi
+				
 			fi
 		;;
 		
@@ -102,40 +118,52 @@ do
 				
 				TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
 				
-				for i in $(seq $((TWO-1)) $((TWO+(RANGE-2))))
-				do
-					ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
-					TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
-					THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
-					FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+				if [[ $((TWO+RANGE)) -gt 255 ]]; then
 					
-					OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
+					echo -e "\e[91mERROR: Illegal IP Address Range\e[0m";
+					echo -e "The range should not be more than the octet value + 254"
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
 					
-					i=$((i+1))
-					
-					OCT_IP="$ONE.$i.$THREE.$FOUR" 
-					
-					echo "$OCT_IP" >> "$U_INPUT"
-					
-					#echo $OCT_IP #Leave for Debugging
+				elif [[ $((TWO+RANGE)) -le 255 ]]; then
 				
-				done
-				printf "\n"
-				while read line;
-				do 
-					#ping $line #Leave for Debugging
+					printf "\n"
+					echo -e "\e[1mThis may take some time\e[0m";
+					for i in $(seq $((TWO-1)) $((TWO+(RANGE-2))))
+					do
+						ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
+						TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
+						THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
+						FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+						
+						OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
+						
+						i=$((i+1))
+						
+						OCT_IP="$ONE.$i.$THREE.$FOUR" 
+						
+						echo "$OCT_IP" >> "$U_INPUT"
+						
+						#echo $OCT_IP #Leave for Debugging
 					
-					ping -w5 $line >/dev/null 2>&1
-					PING_T=$(echo $?)
-					if [ $PING_T -eq 0 ]; then
-						echo -e "$line: \e[32mThe host is available\e[0m";
-					
-					elif [ $PING_T -ge 1 ]; then
-						echo -e "$line: \e[91mHost is unavailable\e[0m";
+					done
+					printf "\n"
+					while read line;
+					do 
+						#ping $line #Leave for Debugging
+						
+						ping -w5 $line >/dev/null 2>&1
+						PING_T=$(echo $?)
+						if [ $PING_T -eq 0 ]; then
+							echo -e "$line: \e[32mThe host is available\e[0m";
+						
+						elif [ $PING_T -ge 1 ]; then
+							echo -e "$line: \e[91mHost is unavailable\e[0m";
 
-					fi
-					
-				done < $U_INPUT
+						fi
+						
+					done < $U_INPUT
+				fi
+				
 			fi
 		;;	
 		
@@ -155,40 +183,52 @@ do
 				
 				THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
 				
-				for i in $(seq $((THREE-1)) $((THREE+(RANGE-2))))
-				do
-					ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
-					TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
-					THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
-					FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
-					
-					OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
-					
-					i=$((i+1))
-					
-					OCT_IP="$ONE.$TWO.$i.$FOUR" 
-					
-					echo "$OCT_IP" >> "$U_INPUT"
-					
-					#echo $OCT_IP #Leave for Debugging	
 				
-				done
-				printf "\n"
-				while read line;
-				do 
-					#ping $line #Leave for Debugging
+				if [[ $((THREE+RANGE)) -gt 255 ]]; then
 					
-					ping -w5 $line >/dev/null 2>&1
-					PING_T=$(echo $?)
-					if [ $PING_T -eq 0 ]; then
-						echo -e "$line: \e[32mThe host is available\e[0m";
+					echo -e "\e[91mERROR: Illegal IP Address Range\e[0m";
+					echo -e "The range should not be more than the octet value + 254"
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
 					
-					elif [ $PING_T -ge 1 ]; then
-						echo -e "$line: \e[91mHost is unavailable\e[0m";
+				elif [[ $((THREE+RANGE)) -le 255 ]]; then
+				
+					printf "\n"
+					echo -e "\e[1mThis may take some time\e[0m";
+					for i in $(seq $((THREE-1)) $((THREE+(RANGE-2))))
+					do
+						ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
+						TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
+						THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
+						FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+						
+						OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
+						
+						i=$((i+1))
+						
+						OCT_IP="$ONE.$TWO.$i.$FOUR" 
+						
+						echo "$OCT_IP" >> "$U_INPUT"
+						
+						#echo $OCT_IP #Leave for Debugging	
+					
+					done
+					printf "\n"
+					while read line;
+					do 
+						#ping $line #Leave for Debugging
+						
+						ping -w5 $line >/dev/null 2>&1
+						PING_T=$(echo $?)
+						if [ $PING_T -eq 0 ]; then
+							echo -e "$line: \e[32mThe host is available\e[0m";
+						
+						elif [ $PING_T -ge 1 ]; then
+							echo -e "$line: \e[91mHost is unavailable\e[0m";
 
-					fi
-					
-				done < $U_INPUT	
+						fi
+						
+					done < $U_INPUT
+				fi	
 			fi
 		;;	
 		
@@ -211,44 +251,56 @@ do
 				
 				FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
 				
-				for i in $(seq $((FOUR-1)) $((FOUR+(RANGE-2))))
-				do
+				
+				if [[ $((FOUR+RANGE)) -gt 255 ]]; then
 					
-					ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
-					TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
-					THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
-					FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+					echo -e "\e[91mERROR: Illegal IP Address Range\e[0m";
+					echo -e "The range should not be more than the octet value + 254"
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
 					
-					OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
-					
-					i=$((i+1))
-					
-					OCT_IP="$ONE.$TWO.$THREE.$i" 
-					
-					echo "$OCT_IP" >> "$U_INPUT"
-					
-					#echo $OCT_IP #Debugging			
-				done
-				printf "\n"
-				while read line;
-				do 
-					#ping $line #Leave for Debugging
-					
-					ping -w5 $line >/dev/null 2>&1
-					PING_T=$(echo $?)
-					if [ $PING_T -eq 0 ]; then
-						echo -e "$line: \e[32mThe host is available\e[0m";
-					
-					elif [ $PING_T -ge 1 ]; then
-						echo -e "$line: \e[91mHost is unavailable\e[0m";
+				elif [[ $((FOUR+RANGE)) -le 255 ]]; then
+				
+					printf "\n"
+					echo -e "\e[1mThis may take some time\e[0m";
+					for i in $(seq $((FOUR-1)) $((FOUR+(RANGE-2))))
+					do
+						
+						ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
+						TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
+						THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
+						FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+						
+						OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
+						
+						i=$((i+1))
+						
+						OCT_IP="$ONE.$TWO.$THREE.$i" 
+						
+						echo "$OCT_IP" >> "$U_INPUT"
+						
+						#echo $OCT_IP #Debugging			
+					done
+					printf "\n"
+					while read line;
+					do 
+						#ping $line #Leave for Debugging
+						
+						ping -w5 $line >/dev/null 2>&1
+						PING_T=$(echo $?)
+						if [ $PING_T -eq 0 ]; then
+							echo -e "$line: \e[32mThe host is available\e[0m";
+						
+						elif [ $PING_T -ge 1 ]; then
+							echo -e "$line: \e[91mHost is unavailable\e[0m";
 
-					fi
-					
-				done < $U_INPUT	
+						fi
+						
+					done < $U_INPUT
+				fi	
 			fi
 		;;
 		
-		#Default selection
+		#Default selection when wrong choice is made
 		
 		*)
 			echo Please enter the starting IP Address
@@ -266,40 +318,52 @@ do
 				
 				FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
 				
-				for i in $(seq $((FOUR-1)) $((FOUR+(RANGE-2))))
-				do
 					
-					ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
-					TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
-					THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
-					FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+				if [[ $((FOUR+RANGE)) -gt 255 ]]; then
 					
-					OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
+					echo -e "\e[91mERROR: Illegal IP Address Range\e[0m";
+					echo -e "The range should not be more than the octet value + 254"
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
 					
-					i=$((i+1))
-					
-					OCT_IP="$ONE.$TWO.$THREE.$i" 
-					
-					echo "$OCT_IP" >> "$U_INPUT"
-					
-					#echo $OCT_IP #Debugging			
-				done
-				printf "\n"
-				while read line;
-				do 
-					#ping $line #Leave for Debugging
-					
-					ping -w5 $line >/dev/null 2>&1
-					PING_T=$(echo $?)
-					if [ $PING_T -eq 0 ]; then
-						echo -e "$line: \e[32mThe host is available\e[0m";
-					
-					elif [ $PING_T -ge 1 ]; then
-						echo -e "$line: \e[91mHost is unavailable\e[0m";
+				elif [[ $((FOUR+RANGE)) -le 255 ]]; then
+			
+					printf "\n"
+					echo -e "\e[1mThis may take some time\e[0m";
+					for i in $(seq $((FOUR-1)) $((FOUR+(RANGE-2))))
+					do
+						
+						ONE=$(echo "$IP_ADDR" | cut -d '.' -f 1)
+						TWO=$(echo "$IP_ADDR" | cut -d '.' -f 2)
+						THREE=$(echo "$IP_ADDR" | cut -d '.' -f 3)
+						FOUR=$(echo "$IP_ADDR" | cut -d '.' -f 4)
+						
+						OCT_IP="$ONE.$TWO.$THREE.$FOUR"	
+						
+						i=$((i+1))
+						
+						OCT_IP="$ONE.$TWO.$THREE.$i" 
+						
+						echo "$OCT_IP" >> "$U_INPUT"
+						
+						#echo $OCT_IP #Debugging			
+					done
+					printf "\n"
+					while read line;
+					do 
+						#ping $line #Leave for Debugging
+						
+						ping -w5 $line >/dev/null 2>&1
+						PING_T=$(echo $?)
+						if [ $PING_T -eq 0 ]; then
+							echo -e "$line: \e[32mThe host is available\e[0m";
+						
+						elif [ $PING_T -ge 1 ]; then
+							echo -e "$line: \e[91mHost is unavailable\e[0m";
 
-					fi
-					
-				done < $U_INPUT	
+						fi
+						
+					done < $U_INPUT
+				fi	
 			fi	
 		;;	
 	esac
