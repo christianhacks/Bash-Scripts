@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #Author: Christian Ekeigwe
 #Description: This is a script that checks if a host is available based on ping tests to the IP address of the host.
-#Last Revision Date: 1/5/2021
+#Last Revision Date: 1/7/2021
 
 IP_ADDR=$1 #Variable holds IP address
 U_INPUT="temp.txt" #Variable holds the temporary unprocessed IP address text file
@@ -111,7 +111,7 @@ do
 			if [[ -z $IP_ADDR ]]; then
 				echo -e "\e[91mERROR: Invalid IP Address\e[0m";
 				echo -e "\e[91mValid IP Address format: XXX.XXX.XXX.XXX\e[0m";
-				echo -e "\e[1m Press [ENTER]\e[0m"
+				echo -e "\e[1m Press [ENTER] to continue\e[0m";
 			else
 				echo Please enter the range or number of hosts
 				read -r RANGE
@@ -162,6 +162,8 @@ do
 						fi
 						
 					done < $U_INPUT
+					
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
 				fi
 				
 			fi
@@ -176,7 +178,7 @@ do
 			if [[ -z $IP_ADDR ]]; then
 				echo -e "\e[91mERROR: Invalid IP Address\e[0m";
 				echo -e "\e[91mValid IP Address format: XXX.XXX.XXX.XXX\e[0m";
-				echo -e "\e[1m Press [ENTER]\e[0m"
+				echo -e "\e[1m Press [ENTER] to continue\e[0m";
 			else
 				echo Please enter the range or number of hosts
 				read -r RANGE
@@ -228,6 +230,8 @@ do
 						fi
 						
 					done < $U_INPUT
+					
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
 				fi	
 			fi
 		;;	
@@ -243,7 +247,7 @@ do
 			if [[ -z $IP_ADDR ]]; then
 				echo -e "\e[91mERROR: Invalid IP Address\e[0m";
 				echo -e "\e[91mValid IP Address format: XXX.XXX.XXX.XXX\e[0m";
-				echo -e "\e[1m Press [ENTER]\e[0m"
+				echo -e "\e[1m Press [ENTER] to continue\e[0m";
 
 			else
 				echo Please enter the range or number of hosts
@@ -296,6 +300,8 @@ do
 						fi
 						
 					done < $U_INPUT
+					
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
 				fi	
 			fi
 		;;
@@ -310,7 +316,7 @@ do
 			if [[ -z $IP_ADDR ]]; then
 				echo -e "\e[91mERROR: Invalid IP Address\e[0m";
 				echo -e "\e[91mValid IP Address format: XXX.XXX.XXX.XXX\e[0m";
-				echo -e "\e[1m Press [ENTER]\e[0m"
+				echo -e "\e[1m Press [ENTER] to continue\e[0m";
 
 			else
 				echo Please enter the range or number of hosts
@@ -363,11 +369,13 @@ do
 						fi
 						
 					done < $U_INPUT
+					
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
 				fi	
 			fi	
 		;;	
 	esac
+	
+	rm -rf $U_INPUT
 
 done
-
-rm -rf $U_INPUT
