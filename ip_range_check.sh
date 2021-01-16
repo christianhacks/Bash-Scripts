@@ -97,6 +97,8 @@ do
 					
 					done < $U_INPUT
 					
+					echo -e "\e[1m Press [ENTER] to continue\e[0m";
+					
 				fi
 				
 			fi
